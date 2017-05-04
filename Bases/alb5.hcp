@@ -1,0 +1,13 @@
+NAME : alb1000
+COMMENT : Hamiltonian cycle problem (Erbacci)
+TYPE : HCP
+DIMENSION : 1000
+EDGE_DATA_FORMAT : EDGE_LIST
+EDGE_DATA_SECTION
+  1 2
+  2 3
+  3 4
+  4 5
+  5 1
+-1
+EOF
