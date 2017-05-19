@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from graph_classes import Bloco
 import pandas as pd
 import networkx as NX # módulo para manipular grafos
 try:
@@ -7,8 +8,9 @@ except ImportError:
     pass
 
 fileName = "alb5.hcp"
+filePath = "Bases/" + fileName
 
-graphFile = open(fileName, "r")
+graphFile = open(filePath, "r")
 graphList = list(graphFile)
 del graphList[0:6]
 del graphList[-2:]
@@ -26,6 +28,14 @@ for v in verticesList:
 
 blocos = G.nodes() + G.edges()
 print(blocos)
+B = list()
+for bloco in blocos:
+    b = Bloco(bloco)
+    B.append(b)
+
+for b in B:
+    print(b.get_value(), "type:", type(b.get_value()))
+
 
 
 """

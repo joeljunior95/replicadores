@@ -14,46 +14,44 @@ class Soup:
         self.pm = 0.01 # probabilidade de mutação
         self.m = 0.001# número gaussiano aleatório
         self.G = NX.Graph()
-        self.T = list()
         self.B = list()
 
         self._inicializa(fileName)
 
-        lista = list()
 
         for k in range(0, self.K):
-            for i in range(0, len(self.T)):
-                b = self._randomBlock()
-                t = self.T[i]
-                self.colidir(b, t)
-                self.replicar(t)
+            for i in range(0, len(self.B)):
+                b1 = self.B[i]
+                b2 = self._randomBlock(b1)
+                self.colidir(b1, b2)
 
 
-    def colidir(self, b, t):
-        MaxMatching = 0
-        PosMaxMatching = -1
-        if t.l > 0:
-            t.l -= 1
-        else:
-            t.l = 0
-            t.tc = 0
+    def colidir(self, b1, b2):
+        edges = self.G.edges()
 
-        for q in range(0, (t.L - b.c)):
-            r = self.matching(q, t, b)
-            if r >= MaxMatching:
-                MaxMatching = r
-                PosMaxMatching = q
 
-            if MaxMatching > self.limiar["mi"]:
-                self.ligar(PosMaxMatching, t, b)
+        vl_b1 = b1.get_value()
+        if type(vl_b1) == type(""):
+            vl_b1 = [vl_b1]
+
+        vl_b2 = b2.get_value()
+        if type(vl_b2) == type(""):
+            vl_b2 = [vl_b2]
+
+        for i in [0, len(vl_b1) - 1]:
+            for j in [0, len(vl_b2) - 1]:
+                # TODO: FAZER MÉTODO PARA COMPARAR OS DOIS VÉrtices,
+                # vl_b1[i] e vl_b2[j], e um método para ligar os dois vertices
+                # gerando um novo bloco. 
+
+
+        for e in edges:
+
+
 
         return
 
-    def ligar(self, PosMaxMatching, t, b):
-        for a in range(PosMaxMatching, PosMaxMatching + b.c):
-            t.bitsMarcados[a] = True
-            t.tl += 1
-        b.bc -= 1
+
 
     def replicar(self, t):
         if t.tl > self.limiar["lambda"] and t.tc > 0:
@@ -70,8 +68,12 @@ class Soup:
         PosMut = randrange(t.L)
         t.bits[PosMut] = self.xnor(t.bits[PosMut], 0)
 
-    def _randomBlock(self):
+    def _randomBlock(self, exception):
         j = randrange(len(self.B))
+
+        while exception == self.B[j]:
+            j = randrange(len(self.B))
+
         return self.B[j]
 
     def _inicializa(self, fileName):
@@ -87,9 +89,14 @@ class Soup:
             verticesList.append(vertices)
 
         for v in verticesList:
-            G.add_edge(v[0], v[1])
+            self.G.add_edge(v[0], v[1])
 
-        self.B = G.nodes() + G.edges()
+        blocos = self.G.nodes() + self.G.edges()
+
+        for bloco in blocos:
+            b = Bloco(bloco)
+            self.B.append(b)
+
         return
 
 
@@ -106,33 +113,14 @@ class Soup:
         return r
 
 
-class Template:
-    def __init__(self, long):
-        self.L = 10 # quantidade de bits
-        self.tc = 1 # número de cópias
-        self.tl = 0 # núemro de ligações
-        self.l = long # longevidade
-        self.bits = list() # cadeia binária
-        self.bitsMarcados = list() # lista booleana indicando quais bits estão marcados
 
-        for i in range(0, self.L):
-            self.bits.append(randrange(2))
-            self.bitsMarcados.append(False)
+class Bloco:
+    def __init__(self, vertices):
+        self.copies = randrange(1, 101) # número de cópias
+        self.value = vertices # lista de vértices
 
+    def get_copies(self):
+        return self.copies
 
-
-class Block:
-    def __init__(self):
-        self.c = randrange(2, 6) # quantidade de bits
-        self.bc = randrange(1, 101) # número de cópias
-        self.bits = list() # cadeia binária
-
-        for i in range(0, self.c):
-            self.bits.append(randrange(2))
-
-
-def main():
-    s1 = Soup()
-
-
-main()
+    def get_value(self):
+        return self.value
