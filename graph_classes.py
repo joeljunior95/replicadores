@@ -22,12 +22,10 @@ class Soup:
                 b1 = self.B[i]
                 b2 = self._randomBlock(b1)
                 self.colidir(b1, b2)
+    #END _INIT_
 
 
     def colidir(self, b1, b2):
-        edges = self.G.edges()
-
-
         vl_b1 = b1.get_value()
         if type(vl_b1) == type(""):
             vl_b1 = [vl_b1]
@@ -38,30 +36,29 @@ class Soup:
 
         for i in [0, len(vl_b1) - 1]:
             for j in [0, len(vl_b2) - 1]:
-                # TODO: FAZER MÉTODO PARA COMPARAR OS DOIS VÉrtices,
-                # vl_b1[i] e vl_b2[j], e um método para ligar os dois vertices
-                # gerando um novo bloco.
+                if _compare(vl_b1[i], vl_b2[j]):
+                    self.replicar(b1, i, b2, j)
+
+        return
+    #END COLIDIR
 
 
+    def replicar(self, b1, idx1, b2, idx2):
+        # TODO: verificar se já não existe
+        # algum bloco igual ao resultado da
+        # junção destes dois, caso exista,
+        # apenas aumentar o número de cópias,
+        # senão, criar um novo bloco e
+        # inserí-lo ao universo de blocos
 
-        for e in edges:
+        # TODO [2]: decrementar o número de
+        # cópias dos blocos originais
 
+        # TODO [3]: tentar encaixar a função
+        # de mutação da nova espécie.
 
 
         return
-
-
-
-    def replicar(self, t):
-        if t.tl > self.limiar["lambda"] and t.tc > 0:
-            t.tc += 1
-            t.tl = 0
-            if t.l > 0:
-                t.l += self.bl
-            for x in range(0, t.L):
-                t.bitsMarcados[x] = False
-            if self.m <= self.pm:
-                self.mutar(t)
 
     def mutar(self, t):
         PosMut = randrange(t.L)
@@ -74,6 +71,16 @@ class Soup:
             j = randrange(len(self.B))
 
         return self.B[j]
+
+    def _compare(self, node1, node2):
+        edges = self.G.edges()
+
+        for e in edges:
+            if e[0] == node1 or e[0] == node2:
+                if e[1] == node1 or e[1] == node2:
+                    return True
+
+        return False
 
     def _inicializa(self, fileName):
         graphFile = open(fileName, "r")
@@ -123,3 +130,8 @@ class Bloco:
 
     def get_value(self):
         return self.value
+
+    def decrease_copies(self):
+        if self.copies > 0:
+            self.copies -= 1
+        return self.copies
