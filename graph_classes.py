@@ -5,11 +5,9 @@ from random import randrange
 
 class Soup:
     def __init__(self, fileName):
+        # lambda => limiar de replicação (min de bits p/ replicar); mi => limiar de matching (min de bits pa ligar)
+        self.limiar = { "lambda": 9, "mi": 2}
         self.K = 10000 # total de colisões
-        self.limiar = {
-            "lambda": 9, # limiar de replicação => qtd mínima de bits para replicar
-            "mi": 2 # limiar de matching => qtd mínima de bits para ligar um bloco e um template
-        }
         self.bl = 100 # bonificação de longevidade
         self.pm = 0.01 # probabilidade de mutação
         self.m = 0.001# número gaussiano aleatório
@@ -42,7 +40,8 @@ class Soup:
             for j in [0, len(vl_b2) - 1]:
                 # TODO: FAZER MÉTODO PARA COMPARAR OS DOIS VÉrtices,
                 # vl_b1[i] e vl_b2[j], e um método para ligar os dois vertices
-                # gerando um novo bloco. 
+                # gerando um novo bloco.
+
 
 
         for e in edges:
@@ -111,7 +110,7 @@ class Soup:
                 r += self.xnor(t.bits[s], b.bits[v])
             v += 1
         return r
-
+#end class Soup
 
 
 class Bloco:
