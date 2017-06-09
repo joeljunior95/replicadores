@@ -44,12 +44,37 @@ class Soup:
 
 
     def replicar(self, b1, idx1, b2, idx2):
+        vl_n = list()
+        vl_b1 = b1.get_value()
+        if type(vl_b1) == type(""):
+            vl_b1 = [vl_b1]
+
+        vl_b2 = b2.get_value()
+        if type(vl_b2) == type(""):
+            vl_b2 = [vl_b2]
+
+        if idx1 == 0:
+            vl_b1 = vl_b1[::-1]
+
+        if idx2 != 0:
+            vl_b2 += vl_b2[::-1] #concatena os vertices de b1 com os vertices (na ordem inversa) de b2
+
+        vl_n += vl_b1 + vl_b2
+
+        b_n = existe_bloco(vl_n)
+
+        if b == False :
+            b_n = Bloco(vl_n)
+            self.B.append(b_n)
+        else:
+            b_n.increase_copies()
         # TODO: verificar se já não existe
         # algum bloco igual ao resultado da
         # junção destes dois, caso exista,
         # apenas aumentar o número de cópias,
         # senão, criar um novo bloco e
         # inserí-lo ao universo de blocos
+
 
         # TODO [2]: decrementar o número de
         # cópias dos blocos originais
@@ -134,4 +159,8 @@ class Bloco:
     def decrease_copies(self):
         if self.copies > 0:
             self.copies -= 1
+        return self.copies
+
+    def increase_copies(self):
+        self.copies += 1
         return self.copies
